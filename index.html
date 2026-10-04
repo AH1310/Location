@@ -1,0 +1,2863 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#07111f">
+
+<title>تتبعي | مشاركة الموقع</title>
+
+<!-- Leaflet -->
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,Tahoma,sans-serif;
+}
+
+body{
+  background:#07111f;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,input,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* ================================
+   LOGIN
+================================ */
+
+.authPage{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+
+  background:
+  radial-gradient(circle at top right,#174b7a,#07111f 55%);
+}
+
+.authCard{
+  width:100%;
+  max-width:440px;
+  padding:28px;
+  border-radius:25px;
+
+  background:rgba(10,25,43,.96);
+
+  border:1px solid #28435e;
+
+  box-shadow:
+  0 25px 80px rgba(0,0,0,.5);
+}
+
+.logo{
+  text-align:center;
+  font-size:55px;
+}
+
+.authCard h1{
+  text-align:center;
+  margin:8px 0;
+}
+
+.subtitle{
+  text-align:center;
+  color:#9bb0c7;
+  margin-bottom:25px;
+  line-height:1.7;
+}
+
+.field{
+  margin-bottom:14px;
+}
+
+.field label{
+  display:block;
+  margin-bottom:7px;
+  color:#b6c5d5;
+  font-size:14px;
+}
+
+input,
+select{
+  width:100%;
+  padding:13px;
+
+  background:#071522;
+  color:white;
+
+  border:1px solid #2d4965;
+  border-radius:12px;
+
+  outline:none;
+}
+
+input:focus,
+select:focus{
+  border-color:#2997ff;
+}
+
+.mainBtn{
+  width:100%;
+  padding:14px;
+
+  border:none;
+  border-radius:13px;
+
+  color:white;
+  font-weight:bold;
+
+  background:
+  linear-gradient(135deg,#0788ff,#6659ff);
+}
+
+.secondaryBtn{
+  padding:10px 13px;
+
+  background:#14283e;
+  color:white;
+
+  border:1px solid #34506e;
+  border-radius:10px;
+}
+
+.successBtn{
+  padding:10px 13px;
+
+  background:#123b2c;
+  color:#8af0b8;
+
+  border:1px solid #23734f;
+  border-radius:10px;
+}
+
+.dangerBtn{
+  padding:10px 13px;
+
+  background:#431c25;
+  color:#ff9eae;
+
+  border:1px solid #7b3040;
+  border-radius:10px;
+}
+
+.switch{
+  text-align:center;
+  margin-top:20px;
+  color:#95a9bf;
+}
+
+.switch span{
+  color:#4da7ff;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#authMessage{
+  text-align:center;
+  margin-top:15px;
+  min-height:22px;
+  color:#ffabab;
+}
+
+/* ================================
+   APP
+================================ */
+
+#appPage{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  height:100vh;
+  overflow:hidden;
+}
+
+.sidebar{
+  background:#081523;
+  border-left:1px solid #263e58;
+
+  padding:16px;
+
+  overflow-y:auto;
+}
+
+.userCard,
+.card{
+  background:#0d1e31;
+
+  border:1px solid #223b55;
+
+  border-radius:18px;
+
+  padding:16px;
+
+  margin-bottom:14px;
+}
+
+.userInfo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.avatar{
+  width:52px;
+  height:52px;
+
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#1b3b5d;
+
+  font-size:27px;
+}
+
+#myName{
+  font-weight:bold;
+}
+
+#myUsername{
+  color:#48a8ff;
+  font-size:14px;
+  margin-top:4px;
+}
+
+.statusBox{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  gap:10px;
+
+  background:#071522;
+
+  padding:10px;
+
+  border-radius:12px;
+
+  margin-top:13px;
+}
+
+.dot{
+  width:9px;
+  height:9px;
+
+  display:inline-block;
+
+  border-radius:50%;
+
+  background:#ef5350;
+
+  margin-left:6px;
+}
+
+.dot.on{
+  background:#32e68a;
+  box-shadow:0 0 10px #32e68a;
+}
+
+.logout{
+  width:100%;
+  margin-top:12px;
+}
+
+.card h3{
+  margin-bottom:14px;
+  font-size:16px;
+}
+
+.small{
+  color:#8ea5bc;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.deviceGrid{
+  display:grid;
+  grid-template-columns:1fr 85px;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.deviceGrid select{
+  text-align:center;
+  font-size:23px;
+}
+
+.item{
+  background:#071522;
+
+  border:1px solid #243c55;
+
+  padding:12px;
+
+  border-radius:13px;
+
+  margin-top:9px;
+}
+
+.deviceRow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.emojiBox{
+  width:43px;
+  height:43px;
+
+  flex:0 0 43px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#16314e;
+
+  border-radius:12px;
+
+  font-size:24px;
+}
+
+.deviceTitle{
+  font-size:14px;
+  font-weight:bold;
+}
+
+.deviceUser{
+  margin-top:3px;
+  font-size:12px;
+  color:#829db8;
+}
+
+.buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:10px;
+}
+
+.empty{
+  color:#758ba3;
+  text-align:center;
+  padding:15px 5px;
+  font-size:13px;
+}
+
+/* ================================
+   MAP
+================================ */
+
+.mapArea{
+  position:relative;
+}
+
+#map{
+  width:100%;
+  height:100vh;
+  background:#17202a;
+}
+
+.mapTitle{
+  position:absolute;
+
+  z-index:1000;
+
+  top:15px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  background:rgba(6,18,31,.92);
+
+  border:1px solid #2b4865;
+
+  padding:10px 17px;
+
+  border-radius:25px;
+
+  box-shadow:
+  0 7px 25px rgba(0,0,0,.3);
+
+  white-space:nowrap;
+}
+
+.markerEmoji{
+  width:50px;
+  height:50px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  border-radius:50%;
+
+  background:white;
+
+  border:4px solid #0788ff;
+
+  font-size:27px;
+
+  box-shadow:
+  0 5px 18px rgba(0,0,0,.45);
+}
+
+.myMarker{
+  border-color:#2ed67b;
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media(max-width:850px){
+
+  #appPage{
+    display:flex;
+    flex-direction:column;
+    height:auto;
+  }
+
+  .mapArea{
+    order:-1;
+    height:55vh;
+  }
+
+  #map{
+    height:55vh;
+  }
+
+  .sidebar{
+    overflow:visible;
+    border-left:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =================================
+     AUTH
+================================== -->
+
+<section id="authPage" class="authPage">
+
+<div class="authCard">
+
+<div class="logo">📍</div>
+
+<h1>تتبعي</h1>
+
+<div class="subtitle">
+مشاركة موقعك مع الأشخاص الذين توافق عليهم فقط
+</div>
+
+
+<!-- LOGIN -->
+
+<div id="loginBox">
+
+<div class="field">
+<label>البريد الإلكتروني</label>
+<input
+id="loginEmail"
+type="email"
+placeholder="example@email.com">
+</div>
+
+<div class="field">
+<label>كلمة المرور</label>
+<input
+id="loginPassword"
+type="password"
+placeholder="••••••••">
+</div>
+
+<button
+id="loginBtn"
+class="mainBtn">
+تسجيل الدخول
+</button>
+
+<div class="switch">
+ليس لديك حساب؟
+<span id="openRegister">
+إنشاء حساب
+</span>
+</div>
+
+</div>
+
+
+<!-- REGISTER -->
+
+<div id="registerBox" class="hidden">
+
+<div class="field">
+<label>الاسم</label>
+<input
+id="regName"
+placeholder="مثال: أحمد">
+</div>
+
+<div class="field">
+<label>معرف المستخدم</label>
+<input
+id="regUsername"
+placeholder="ahmed13">
+</div>
+
+<div class="small"
+style="margin:-7px 0 13px">
+سيظهر مثل @ahmed13
+</div>
+
+<div class="field">
+<label>البريد الإلكتروني</label>
+<input
+id="regEmail"
+type="email">
+</div>
+
+<div class="field">
+<label>كلمة المرور</label>
+<input
+id="regPassword"
+type="password"
+minlength="6">
+</div>
+
+<button
+id="registerBtn"
+class="mainBtn">
+إنشاء الحساب
+</button>
+
+<div class="switch">
+لديك حساب؟
+<span id="openLogin">
+تسجيل الدخول
+</span>
+</div>
+
+</div>
+
+<div id="authMessage"></div>
+
+</div>
+</section>
+
+
+<!-- =================================
+     MAIN APP
+================================== -->
+
+<section id="appPage" class="hidden">
+
+<aside class="sidebar">
+
+
+<!-- USER -->
+
+<div class="userCard">
+
+<div class="userInfo">
+
+<div class="avatar">👤</div>
+
+<div>
+<div id="myName">...</div>
+<div id="myUsername">@...</div>
+</div>
+
+</div>
+
+
+<div class="statusBox">
+
+<div>
+<span id="locationDot" class="dot"></span>
+<span id="locationStatus">
+الموقع متوقف
+</span>
+</div>
+
+<button
+id="locationBtn"
+class="successBtn">
+تشغيل الموقع
+</button>
+
+</div>
+
+<button
+id="logoutBtn"
+class="secondaryBtn logout">
+تسجيل الخروج
+</button>
+
+</div>
+
+
+<!-- ADD TRACKING -->
+
+<div class="card">
+
+<h3>➕ إضافة جهاز</h3>
+
+<div class="field">
+
+<label>
+معرف المستخدم الذي تريد إرسال الطلب له
+</label>
+
+<input
+id="targetUsername"
+placeholder="@username">
+
+</div>
+
+
+<label class="small">
+اسم الجهاز والرمز الذي سيظهر على خريطتك
+</label>
+
+<div class="deviceGrid">
+
+<input
+id="deviceName"
+placeholder="مثال: هاتف محمد">
+
+<select id="deviceEmoji">
+<option>📱</option>
+<option>👤</option>
+<option>🚗</option>
+<option>🚙</option>
+<option>🏍️</option>
+<option>🚚</option>
+<option>🚌</option>
+<option>🎒</option>
+<option>❤️</option>
+<option>⭐</option>
+<option>👦</option>
+<option>👧</option>
+<option>👨</option>
+<option>👩</option>
+</select>
+
+</div>
+
+<button
+id="sendRequestBtn"
+class="mainBtn">
+إرسال طلب التتبع
+</button>
+
+</div>
+
+
+<!-- REQUESTS -->
+
+<div class="card">
+
+<h3>🔔 طلبات التتبع</h3>
+
+<div id="requestsList">
+
+<div class="empty">
+لا توجد طلبات
+</div>
+
+</div>
+
+</div>
+
+
+<!-- TRACKING -->
+
+<div class="card">
+
+<h3>📍 الأجهزة التي أتابعها</h3>
+
+<div id="devicesList">
+
+<div class="empty">
+لا توجد أجهزة
+</div>
+
+</div>
+
+</div>
+
+
+<!-- VIEWERS -->
+
+<div class="card">
+
+<h3>👁️ الأشخاص الذين يمكنهم رؤية موقعي</h3>
+
+<div id="viewersList">
+
+<div class="empty">
+لا يوجد أحد
+</div>
+
+</div>
+
+</div>
+
+
+</aside>
+
+
+<!-- MAP -->
+
+<main class="mapArea">
+
+<div class="mapTitle">
+🗺️ الأجهزة المتصلة
+</div>
+
+<div id="map"></div>
+
+</main>
+
+</section>
+
+
+<!-- Leaflet -->
+
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script type="module">
+
+/* ======================================
+   FIREBASE
+====================================== */
+
+import {
+ initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+
+
+import {
+ getAuth,
+ createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,
+ signOut,
+ onAuthStateChanged,
+ deleteUser
+}
+from
+"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+
+import {
+ getDatabase,
+ ref,
+ set,
+ get,
+ update,
+ remove,
+ push,
+ onValue,
+ serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+
+/* ======================================
+   YOUR FIREBASE
+====================================== */
+
+const firebaseConfig = {
+
+ apiKey:
+ "AIzaSyArvBVcRcbMFUqfnr7NFO3V5o2G3jttbl0",
+
+ authDomain:
+ "location-2-8dcdd.firebaseapp.com",
+
+ databaseURL:
+ "https://location-2-8dcdd-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+ projectId:
+ "location-2-8dcdd",
+
+ storageBucket:
+ "location-2-8dcdd.firebasestorage.app",
+
+ messagingSenderId:
+ "982855762634",
+
+ appId:
+ "1:982855762634:web:21227b4aafab56818daa33",
+
+ measurementId:
+ "G-67P3J4FLF7"
+
+};
+
+
+const firebaseApp =
+ initializeApp(firebaseConfig);
+
+const auth =
+ getAuth(firebaseApp);
+
+const db =
+ getDatabase(firebaseApp);
+
+
+/* ======================================
+   VARIABLES
+====================================== */
+
+let currentUser = null;
+let profile = null;
+
+let map = null;
+
+let myMapMarker = null;
+
+let geoWatch = null;
+
+let locationRunning = false;
+
+let viewerConnections = {};
+let targetConnections = {};
+
+let markers = {};
+
+let listenerStops = [];
+
+
+/* ======================================
+   ELEMENTS
+====================================== */
+
+const authPage =
+ document.getElementById("authPage");
+
+const appPage =
+ document.getElementById("appPage");
+
+const loginBox =
+ document.getElementById("loginBox");
+
+const registerBox =
+ document.getElementById("registerBox");
+
+const authMessage =
+ document.getElementById("authMessage");
+
+const requestsList =
+ document.getElementById("requestsList");
+
+const devicesList =
+ document.getElementById("devicesList");
+
+const viewersList =
+ document.getElementById("viewersList");
+
+const locationBtn =
+ document.getElementById("locationBtn");
+
+const locationDot =
+ document.getElementById("locationDot");
+
+const locationStatus =
+ document.getElementById("locationStatus");
+
+
+/* ======================================
+   LOGIN / REGISTER SWITCH
+====================================== */
+
+document.getElementById("openRegister")
+.onclick = () => {
+
+ loginBox.classList.add("hidden");
+
+ registerBox.classList.remove("hidden");
+
+ authMessage.textContent = "";
+
+};
+
+
+document.getElementById("openLogin")
+.onclick = () => {
+
+ registerBox.classList.add("hidden");
+
+ loginBox.classList.remove("hidden");
+
+ authMessage.textContent = "";
+
+};
+
+
+/* ======================================
+   CLEAN USERNAME
+====================================== */
+
+function cleanUsername(value){
+
+ return value
+ .trim()
+ .toLowerCase()
+ .replaceAll("@","")
+ .replace(/[^a-z0-9_.]/g,"");
+
+}
+
+
+/* ======================================
+   REGISTER
+====================================== */
+
+document.getElementById("registerBtn")
+.onclick = async () => {
+
+ const name =
+ document.getElementById("regName")
+ .value.trim();
+
+ const username =
+ cleanUsername(
+ document.getElementById("regUsername").value
+ );
+
+ const email =
+ document.getElementById("regEmail")
+ .value.trim();
+
+ const password =
+ document.getElementById("regPassword").value;
+
+
+ if(!name || username.length < 3){
+
+  authMessage.textContent =
+  "اكتب الاسم ومعرف مستخدم من 3 أحرف على الأقل.";
+
+  return;
+ }
+
+
+ if(!email || password.length < 6){
+
+  authMessage.textContent =
+  "تحقق من البريد وكلمة المرور.";
+
+  return;
+ }
+
+
+ authMessage.textContent =
+ "جاري إنشاء الحساب...";
+
+
+ let createdUser = null;
+
+
+ try{
+
+  const usernameRef =
+  ref(db,"usernames/" + username);
+
+
+  const existing =
+  await get(usernameRef);
+
+
+  if(existing.exists()){
+
+   authMessage.textContent =
+   "معرف المستخدم مستخدم بالفعل.";
+
+   return;
+  }
+
+
+  const result =
+  await createUserWithEmailAndPassword(
+   auth,
+   email,
+   password
+  );
+
+
+  createdUser = result.user;
+
+
+  /*
+   نكتب البيانات في تحديث واحد
+  */
+
+  const updates = {};
+
+
+  updates[
+   "users/" + createdUser.uid
+  ] = {
+
+   uid:createdUser.uid,
+
+   name:name,
+
+   username:username,
+
+   createdAt:Date.now()
+
+  };
+
+
+  updates[
+   "usernames/" + username
+  ] = {
+
+   uid:createdUser.uid,
+
+   name:name
+
+  };
+
+
+  await update(
+   ref(db),
+   updates
+  );
+
+
+  authMessage.textContent = "";
+
+
+ }catch(error){
+
+  console.error(error);
+
+
+  if(createdUser){
+
+   try{
+    await deleteUser(createdUser);
+   }catch(e){}
+
+  }
+
+
+  authMessage.textContent =
+  firebaseError(error);
+
+ }
+
+};
+
+
+/* ======================================
+   LOGIN
+====================================== */
+
+document.getElementById("loginBtn")
+.onclick = async () => {
+
+ const email =
+ document.getElementById("loginEmail")
+ .value.trim();
+
+ const password =
+ document.getElementById("loginPassword")
+ .value;
+
+
+ try{
+
+  authMessage.textContent =
+  "جاري تسجيل الدخول...";
+
+
+  await signInWithEmailAndPassword(
+   auth,
+   email,
+   password
+  );
+
+
+  authMessage.textContent = "";
+
+
+ }catch(error){
+
+  console.error(error);
+
+  authMessage.textContent =
+  "البريد أو كلمة المرور غير صحيحة.";
+
+ }
+
+};
+
+
+/* ======================================
+   LOGOUT
+====================================== */
+
+document.getElementById("logoutBtn")
+.onclick = async () => {
+
+ stopLocation();
+
+ clearListeners();
+
+ await signOut(auth);
+
+};
+
+
+/* ======================================
+   AUTH STATE
+====================================== */
+
+onAuthStateChanged(
+ auth,
+ async user => {
+
+  clearListeners();
+
+  currentUser = user;
+
+
+  if(!user){
+
+   profile = null;
+
+   appPage.classList.add("hidden");
+
+   authPage.classList.remove("hidden");
+
+   return;
+  }
+
+
+  try{
+
+   const snap =
+   await get(
+    ref(db,"users/" + user.uid)
+   );
+
+
+   if(!snap.exists()){
+
+    alert(
+     "لم يتم العثور على بيانات الحساب."
+    );
+
+    await signOut(auth);
+
+    return;
+   }
+
+
+   profile = snap.val();
+
+
+   document.getElementById("myName")
+   .textContent =
+   profile.name;
+
+
+   document.getElementById("myUsername")
+   .textContent =
+   "@" + profile.username;
+
+
+   authPage.classList.add("hidden");
+
+   appPage.classList.remove("hidden");
+
+
+   initMap();
+
+
+   setTimeout(
+    () => map.invalidateSize(),
+    300
+   );
+
+
+   listenRequests();
+
+   listenViewerConnections();
+
+   listenTargetConnections();
+
+
+  }catch(error){
+
+   console.error(error);
+
+  }
+
+ }
+);
+
+
+/* ======================================
+   MAP
+====================================== */
+
+function initMap(){
+
+ if(map) return;
+
+
+ map = L.map(
+  "map",
+  {
+   zoomControl:true
+  }
+ ).setView(
+  [24.7136,46.6753],
+  6
+ );
+
+
+ L.tileLayer(
+  "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+
+   maxZoom:19,
+
+   attribution:
+   '&copy; OpenStreetMap contributors'
+
+  }
+ ).addTo(map);
+
+}
+
+
+/* ======================================
+   CUSTOM EMOJI MARKER
+====================================== */
+
+function emojiIcon(
+ emoji,
+ myLocation = false
+){
+
+ return L.divIcon({
+
+  className:"",
+
+  html:
+  `<div class="markerEmoji ${
+   myLocation ? "myMarker" : ""
+  }">${escapeHTML(emoji)}</div>`,
+
+  iconSize:[50,50],
+
+  iconAnchor:[25,25]
+
+ });
+
+}
+
+
+/* ======================================
+   SEND REQUEST
+====================================== */
+
+document.getElementById("sendRequestBtn")
+.onclick = async () => {
+
+ if(!currentUser || !profile)
+ return;
+
+
+ const username =
+ cleanUsername(
+  document.getElementById(
+   "targetUsername"
+  ).value
+ );
+
+
+ const deviceName =
+ document.getElementById(
+  "deviceName"
+ ).value.trim();
+
+
+ const emoji =
+ document.getElementById(
+  "deviceEmoji"
+ ).value;
+
+
+ if(!username || !deviceName){
+
+  alert(
+   "اكتب معرف المستخدم واسم الجهاز."
+  );
+
+  return;
+ }
+
+
+ if(username === profile.username){
+
+  alert(
+   "لا يمكنك إرسال طلب لنفسك."
+  );
+
+  return;
+ }
+
+
+ try{
+
+  const usernameSnap =
+  await get(
+   ref(
+    db,
+    "usernames/" + username
+   )
+  );
+
+
+  if(!usernameSnap.exists()){
+
+   alert(
+    "المعرف @" +
+    username +
+    " غير موجود."
+   );
+
+   return;
+  }
+
+
+  const target =
+  usernameSnap.val();
+
+
+  const targetUid =
+  target.uid;
+
+
+  const newRequest =
+  push(
+   ref(
+    db,
+    "requests/" + targetUid
+   )
+  );
+
+
+  await set(
+   newRequest,
+   {
+
+    fromUid:
+    currentUser.uid,
+
+    fromName:
+    profile.name,
+
+    fromUsername:
+    profile.username,
+
+    toUid:
+    targetUid,
+
+    deviceName:
+    deviceName,
+
+    emoji:
+    emoji,
+
+    status:
+    "pending",
+
+    createdAt:
+    Date.now()
+
+   }
+  );
+
+
+  document.getElementById(
+   "targetUsername"
+  ).value = "";
+
+
+  document.getElementById(
+   "deviceName"
+  ).value = "";
+
+
+  alert(
+   "تم إرسال طلب التتبع ✅"
+  );
+
+
+ }catch(error){
+
+  console.error(error);
+
+  alert(
+   "حدث خطأ أثناء إرسال الطلب."
+  );
+
+ }
+
+};
+
+
+/* ======================================
+   REQUEST LISTENER
+====================================== */
+
+function listenRequests(){
+
+ const requestRef =
+ ref(
+  db,
+  "requests/" + currentUser.uid
+ );
+
+
+ const stop =
+ onValue(
+  requestRef,
+  snapshot => {
+
+   const requests =
+   snapshot.val() || {};
+
+
+   renderRequests(requests);
+
+  }
+ );
+
+
+ listenerStops.push(stop);
+
+}
+
+
+/* ======================================
+   RENDER REQUESTS
+====================================== */
+
+function renderRequests(data){
+
+ const entries =
+ Object.entries(data)
+ .filter(
+  ([id,item]) =>
+  item.status === "pending"
+ );
+
+
+ if(!entries.length){
+
+  requestsList.innerHTML =
+  `<div class="empty">
+   لا توجد طلبات جديدة
+   </div>`;
+
+  return;
+ }
+
+
+ requestsList.innerHTML = "";
+
+
+ entries.forEach(
+  ([id,item]) => {
+
+   const box =
+   document.createElement("div");
+
+   box.className = "item";
+
+
+   box.innerHTML = `
+
+   <div class="deviceRow">
+
+    <div class="emojiBox">
+     ${escapeHTML(item.emoji)}
+    </div>
+
+    <div>
+
+     <div class="deviceTitle">
+      ${escapeHTML(item.fromName)}
+     </div>
+
+     <div class="deviceUser">
+      @${escapeHTML(item.fromUsername)}
+     </div>
+
+    </div>
+
+   </div>
+
+   <div class="small"
+        style="margin-top:10px">
+
+    يريد مشاهدة موقعك.
+
+    سيظهر جهازك لديه باسم
+
+    <strong>
+     ${escapeHTML(item.deviceName)}
+    </strong>
+
+   </div>
+
+   <div class="buttons">
+
+    <button class="successBtn accept">
+     موافق
+    </button>
+
+    <button class="dangerBtn reject">
+     رفض
+    </button>
+
+   </div>
+
+   `;
+
+
+   box.querySelector(".accept")
+   .onclick =
+   () => acceptRequest(id,item);
+
+
+   box.querySelector(".reject")
+   .onclick =
+   () => rejectRequest(id);
+
+
+   requestsList.appendChild(box);
+
+  }
+ );
+
+}
+
+
+/* ======================================
+   ACCEPT REQUEST
+====================================== */
+
+async function acceptRequest(
+ requestId,
+ item
+){
+
+ if(
+  !confirm(
+   "هل توافق على مشاركة موقعك مع @" +
+   item.fromUsername +
+   "؟"
+  )
+ ){
+  return;
+ }
+
+
+ try{
+
+  /*
+   connection ID = request ID
+  */
+
+  const connectionId =
+  requestId;
+
+
+  const viewerData = {
+
+   viewerUid:
+   item.fromUid,
+
+   targetUid:
+   currentUser.uid,
+
+   targetUsername:
+   profile.username,
+
+   targetName:
+   profile.name,
+
+   deviceName:
+   item.deviceName,
+
+   emoji:
+   item.emoji,
+
+   createdAt:
+   Date.now()
+
+  };
+
+
+  const targetData = {
+
+   viewerUid:
+   item.fromUid,
+
+   viewerName:
+   item.fromName,
+
+   viewerUsername:
+   item.fromUsername,
+
+   targetUid:
+   currentUser.uid,
+
+   deviceName:
+   item.deviceName,
+
+   emoji:
+   item.emoji,
+
+   createdAt:
+   Date.now()
+
+  };
+
+
+  /*
+   نكتب اتصال للطرفين
+  */
+
+  await set(
+   ref(
+    db,
+    "viewerConnections/" +
+    item.fromUid +
+    "/" +
+    connectionId
+   ),
+   viewerData
+  );
+
+
+  await set(
+   ref(
+    db,
+    "targetConnections/" +
+    currentUser.uid +
+    "/" +
+    connectionId
+   ),
+   targetData
+  );
+
+
+  await update(
+   ref(
+    db,
+    "requests/" +
+    currentUser.uid +
+    "/" +
+    requestId
+   ),
+   {
+
+    status:"accepted",
+
+    respondedAt:
+    Date.now()
+
+   }
+  );
+
+
+  alert(
+   "تمت الموافقة ✅\n" +
+   "اضغط «تشغيل الموقع» عندما تريد مشاركة موقعك."
+  );
+
+
+ }catch(error){
+
+  console.error(error);
+
+  alert(
+   "تعذر قبول الطلب."
+  );
+
+ }
+
+}
+
+
+/* ======================================
+   REJECT REQUEST
+====================================== */
+
+async function rejectRequest(
+ requestId
+){
+
+ try{
+
+  await update(
+   ref(
+    db,
+    "requests/" +
+    currentUser.uid +
+    "/" +
+    requestId
+   ),
+   {
+
+    status:"rejected",
+
+    respondedAt:
+    Date.now()
+
+   }
+  );
+
+ }catch(error){
+
+  console.error(error);
+
+ }
+
+}
+
+
+/* ======================================
+   VIEWER CONNECTIONS
+   الأجهزة التي أتابعها
+====================================== */
+
+function listenViewerConnections(){
+
+ const connectionsRef =
+ ref(
+  db,
+  "viewerConnections/" +
+  currentUser.uid
+ );
+
+
+ const stop =
+ onValue(
+  connectionsRef,
+  snapshot => {
+
+   viewerConnections =
+   snapshot.val() || {};
+
+
+   renderDevices();
+
+   listenDeviceLocations();
+
+  }
+ );
+
+
+ listenerStops.push(stop);
+
+}
+
+
+/* ======================================
+   RENDER DEVICES
+====================================== */
+
+function renderDevices(){
+
+ const entries =
+ Object.entries(
+  viewerConnections
+ );
+
+
+ if(!entries.length){
+
+  devicesList.innerHTML =
+  `<div class="empty">
+   لا توجد أجهزة
+   </div>`;
+
+  return;
+ }
+
+
+ devicesList.innerHTML = "";
+
+
+ entries.forEach(
+  ([id,item]) => {
+
+   const box =
+   document.createElement("div");
+
+
+   box.className = "item";
+
+
+   box.innerHTML = `
+
+   <div class="deviceRow">
+
+    <div class="emojiBox">
+     ${escapeHTML(item.emoji)}
+    </div>
+
+    <div>
+
+     <div class="deviceTitle">
+      ${escapeHTML(item.deviceName)}
+     </div>
+
+     <div class="deviceUser">
+      @${escapeHTML(item.targetUsername)}
+     </div>
+
+    </div>
+
+   </div>
+
+   <div
+    id="deviceStatus-${id}"
+    class="small"
+    style="margin-top:9px">
+
+    في انتظار مشاركة الموقع...
+
+   </div>
+
+   <div class="buttons">
+
+    <button class="secondaryBtn locate">
+     عرض على الخريطة
+    </button>
+
+    <button class="dangerBtn remove">
+     إلغاء التتبع
+    </button>
+
+   </div>
+
+   `;
+
+
+   box.querySelector(".locate")
+   .onclick =
+   () => focusDevice(id);
+
+
+   box.querySelector(".remove")
+   .onclick =
+   () => removeConnection(
+    id,
+    item
+   );
+
+
+   devicesList.appendChild(box);
+
+  }
+ );
+
+}
+
+
+/* ======================================
+   TARGET CONNECTIONS
+   من يشاهدني
+====================================== */
+
+function listenTargetConnections(){
+
+ const connectionsRef =
+ ref(
+  db,
+  "targetConnections/" +
+  currentUser.uid
+ );
+
+
+ const stop =
+ onValue(
+  connectionsRef,
+  snapshot => {
+
+   targetConnections =
+   snapshot.val() || {};
+
+
+   renderViewers();
+
+  }
+ );
+
+
+ listenerStops.push(stop);
+
+}
+
+
+/* ======================================
+   RENDER VIEWERS
+====================================== */
+
+function renderViewers(){
+
+ const entries =
+ Object.entries(
+  targetConnections
+ );
+
+
+ if(!entries.length){
+
+  viewersList.innerHTML =
+  `<div class="empty">
+   لا يوجد أحد
+   </div>`;
+
+  if(locationRunning){
+   stopLocation();
+  }
+
+  return;
+ }
+
+
+ viewersList.innerHTML = "";
+
+
+ entries.forEach(
+  ([id,item]) => {
+
+   const box =
+   document.createElement("div");
+
+
+   box.className = "item";
+
+
+   box.innerHTML = `
+
+   <div class="deviceRow">
+
+    <div class="emojiBox">
+     👁️
+    </div>
+
+    <div>
+
+     <div class="deviceTitle">
+      ${escapeHTML(item.viewerName)}
+     </div>
+
+     <div class="deviceUser">
+      @${escapeHTML(item.viewerUsername)}
+     </div>
+
+    </div>
+
+   </div>
+
+   <div class="small"
+        style="margin-top:8px">
+
+    يمكنه رؤية موقعك عندما تشغّل المشاركة.
+
+   </div>
+
+   <div class="buttons">
+
+    <button class="dangerBtn revoke">
+     إلغاء وصوله
+    </button>
+
+   </div>
+
+   `;
+
+
+   box.querySelector(".revoke")
+   .onclick =
+   () => removeConnection(
+    id,
+    item
+   );
+
+
+   viewersList.appendChild(box);
+
+  }
+ );
+
+}
+
+
+/* ======================================
+   LOCATION BUTTON
+====================================== */
+
+locationBtn.onclick = () => {
+
+ if(locationRunning){
+
+  stopLocation();
+
+ }else{
+
+  startLocation();
+
+ }
+
+};
+
+
+/* ======================================
+   START GPS
+====================================== */
+
+function startLocation(){
+
+ if(!navigator.geolocation){
+
+  alert(
+   "هذا الجهاز لا يدعم تحديد الموقع."
+  );
+
+  return;
+ }
+
+
+ if(
+  Object.keys(targetConnections)
+  .length === 0
+ ){
+
+  alert(
+   "لا يوجد شخص وافقت على مشاركة موقعك معه."
+  );
+
+  return;
+ }
+
+
+ locationStatus.textContent =
+ "جاري تحديد موقعك...";
+
+
+ geoWatch =
+ navigator.geolocation.watchPosition(
+
+  async position => {
+
+   locationRunning = true;
+
+   updateLocationUI();
+
+
+   const lat =
+   position.coords.latitude;
+
+   const lng =
+   position.coords.longitude;
+
+   const accuracy =
+   position.coords.accuracy;
+
+
+   /*
+    إظهار موقعي على جهازي
+   */
+
+   updateMyMarker(
+    lat,
+    lng,
+    accuracy
+   );
+
+
+   /*
+    إرسال الموقع لكل اتصال وافقت عليه
+   */
+
+   await publishLocation(
+    lat,
+    lng,
+    accuracy
+   );
+
+  },
+
+
+  error => {
+
+   console.error(error);
+
+   locationRunning = false;
+
+   updateLocationUI();
+
+
+   let text =
+   "تعذر تحديد الموقع.";
+
+
+   if(error.code === 1){
+
+    text =
+    "تم رفض إذن الموقع. اسمح للموقع باستخدام موقعك من إعدادات المتصفح.";
+
+   }
+
+
+   if(error.code === 2){
+
+    text =
+    "تعذر الحصول على موقع الجهاز.";
+
+   }
+
+
+   if(error.code === 3){
+
+    text =
+    "استغرق تحديد الموقع وقتًا طويلًا. حاول مرة أخرى.";
+
+   }
+
+
+   alert(text);
+
+  },
+
+
+  {
+
+   enableHighAccuracy:true,
+
+   maximumAge:3000,
+
+   timeout:15000
+
+  }
+
+ );
+
+}
+
+
+/* ======================================
+   STOP GPS
+====================================== */
+
+function stopLocation(){
+
+ if(geoWatch !== null){
+
+  navigator.geolocation
+  .clearWatch(geoWatch);
+
+  geoWatch = null;
+
+ }
+
+
+ locationRunning = false;
+
+ updateLocationUI();
+
+}
+
+
+/* ======================================
+   LOCATION UI
+====================================== */
+
+function updateLocationUI(){
+
+ if(locationRunning){
+
+  locationDot.classList.add("on");
+
+  locationStatus.textContent =
+  "الموقع يعمل";
+
+  locationBtn.textContent =
+  "إيقاف الموقع";
+
+  locationBtn.className =
+  "dangerBtn";
+
+ }else{
+
+  locationDot.classList.remove("on");
+
+  locationStatus.textContent =
+  "الموقع متوقف";
+
+  locationBtn.textContent =
+  "تشغيل الموقع";
+
+  locationBtn.className =
+  "successBtn";
+
+ }
+
+}
+
+
+/* ======================================
+   MY MARKER
+====================================== */
+
+function updateMyMarker(
+ lat,
+ lng,
+ accuracy
+){
+
+ if(!map)
+ return;
+
+
+ if(myMapMarker){
+
+  myMapMarker.setLatLng(
+   [lat,lng]
+  );
+
+ }else{
+
+  myMapMarker =
+  L.marker(
+   [lat,lng],
+   {
+    icon:
+    emojiIcon("📍",true)
+   }
+  )
+  .addTo(map)
+  .bindPopup(
+   "موقعك الحالي"
+  );
+
+
+  map.setView(
+   [lat,lng],
+   16
+  );
+
+ }
+
+}
+
+
+/* ======================================
+   PUBLISH LOCATION
+====================================== */
+
+async function publishLocation(
+ lat,
+ lng,
+ accuracy
+){
+
+ const entries =
+ Object.entries(
+  targetConnections
+ );
+
+
+ for(
+  const [connectionId,item]
+  of entries
+ ){
+
+  try{
+
+   await set(
+    ref(
+     db,
+     "locations/" +
+     connectionId
+    ),
+    {
+
+     viewerUid:
+     item.viewerUid,
+
+     targetUid:
+     currentUser.uid,
+
+     latitude:
+     lat,
+
+     longitude:
+     lng,
+
+     accuracy:
+     accuracy || 0,
+
+     updatedAt:
+     Date.now()
+
+    }
+   );
+
+
+  }catch(error){
+
+   console.error(
+    "Location error",
+    error
+   );
+
+  }
+
+ }
+
+}
+
+
+/* ======================================
+   LISTEN LOCATIONS
+====================================== */
+
+let locationListenerStops = [];
+
+
+function listenDeviceLocations(){
+
+ locationListenerStops.forEach(
+  stop => {
+
+   try{
+    stop();
+   }catch(e){}
+
+  }
+ );
+
+
+ locationListenerStops = [];
+
+
+ /*
+  حذف العلامات الخاصة باتصالات انتهت
+ */
+
+ Object.keys(markers)
+ .forEach(id => {
+
+  if(!viewerConnections[id]){
+
+   map.removeLayer(
+    markers[id]
+   );
+
+   delete markers[id];
+
+  }
+
+ });
+
+
+ Object.entries(
+  viewerConnections
+ )
+ .forEach(
+  ([connectionId,item]) => {
+
+   const locationRef =
+   ref(
+    db,
+    "locations/" +
+    connectionId
+   );
+
+
+   const stop =
+   onValue(
+    locationRef,
+    snapshot => {
+
+     if(!snapshot.exists()){
+
+      setDeviceStatus(
+       connectionId,
+       "المستخدم لم يشارك موقعه بعد."
+      );
+
+      return;
+     }
+
+
+     const location =
+     snapshot.val();
+
+
+     const age =
+     Date.now() -
+     (location.updatedAt || 0);
+
+
+     let status =
+     "متصل الآن";
+
+
+     if(age > 60000){
+
+      status =
+      "آخر موقع منذ " +
+      Math.round(age / 60000) +
+      " دقيقة";
+
+     }
+
+
+     setDeviceStatus(
+      connectionId,
+      status +
+      " • دقة " +
+      Math.round(
+       location.accuracy || 0
+      ) +
+      " م"
+     );
+
+
+     updateDeviceMarker(
+      connectionId,
+      item,
+      location
+     );
+
+    }
+   );
+
+
+   locationListenerStops.push(
+    stop
+   );
+
+  }
+ );
+
+}
+
+
+/* ======================================
+   DEVICE MARKER
+====================================== */
+
+function updateDeviceMarker(
+ id,
+ item,
+ location
+){
+
+ if(!map)
+ return;
+
+
+ const position = [
+
+  Number(location.latitude),
+
+  Number(location.longitude)
+
+ ];
+
+
+ if(markers[id]){
+
+  markers[id]
+  .setLatLng(position);
+
+  return;
+ }
+
+
+ markers[id] =
+ L.marker(
+  position,
+  {
+   icon:
+   emojiIcon(item.emoji)
+  }
+ )
+ .addTo(map)
+ .bindPopup(
+  `<strong>
+   ${escapeHTML(item.deviceName)}
+   </strong>
+   <br>
+   @${escapeHTML(item.targetUsername)}`
+ );
+
+}
+
+
+/* ======================================
+   FOCUS DEVICE
+====================================== */
+
+function focusDevice(id){
+
+ if(!markers[id]){
+
+  alert(
+   "لم يصل موقع هذا الجهاز حتى الآن."
+  );
+
+  return;
+ }
+
+
+ const pos =
+ markers[id].getLatLng();
+
+
+ map.setView(
+  [pos.lat,pos.lng],
+  17
+ );
+
+
+ markers[id].openPopup();
+
+}
+
+
+/* ======================================
+   DEVICE STATUS
+====================================== */
+
+function setDeviceStatus(
+ id,
+ text
+){
+
+ const element =
+ document.getElementById(
+  "deviceStatus-" + id
+ );
+
+
+ if(element){
+
+  element.textContent =
+  text;
+
+ }
+
+}
+
+
+/* ======================================
+   REMOVE CONNECTION
+====================================== */
+
+async function removeConnection(
+ connectionId,
+ item
+){
+
+ if(
+  !confirm(
+   "هل تريد إلغاء اتصال التتبع؟"
+  )
+ ){
+  return;
+ }
+
+
+ try{
+
+  const viewerUid =
+  item.viewerUid;
+
+
+  const targetUid =
+  item.targetUid;
+
+
+  /*
+   نحذف من المسار الذي يسمح للمستخدم الحالي بحذفه أولاً.
+   حذف النسخة المقابلة يعتمد على قواعد Firebase.
+  */
+
+
+  if(
+   currentUser.uid === viewerUid
+  ){
+
+   await remove(
+    ref(
+     db,
+     "viewerConnections/" +
+     viewerUid +
+     "/" +
+     connectionId
+    )
+   );
+
+
+   try{
+
+    await remove(
+     ref(
+      db,
+      "targetConnections/" +
+      targetUid +
+      "/" +
+      connectionId
+     )
+    );
+
+   }catch(e){
+    console.log(e);
+   }
+
+  }
+
+
+  if(
+   currentUser.uid === targetUid
+  ){
+
+   await remove(
+    ref(
+     db,
+     "targetConnections/" +
+     targetUid +
+     "/" +
+     connectionId
+    )
+   );
+
+
+   try{
+
+    await remove(
+     ref(
+      db,
+      "viewerConnections/" +
+      viewerUid +
+      "/" +
+      connectionId
+     )
+    );
+
+   }catch(e){
+    console.log(e);
+   }
+
+  }
+
+
+  try{
+
+   await remove(
+    ref(
+     db,
+     "locations/" +
+     connectionId
+    )
+   );
+
+  }catch(e){}
+
+
+  if(markers[connectionId]){
+
+   map.removeLayer(
+    markers[connectionId]
+   );
+
+   delete markers[
+    connectionId
+   ];
+
+  }
+
+
+ }catch(error){
+
+  console.error(error);
+
+  alert(
+   "تعذر إلغاء الاتصال."
+  );
+
+ }
+
+}
+
+
+/* ======================================
+   CLEAR LISTENERS
+====================================== */
+
+function clearListeners(){
+
+ listenerStops.forEach(
+  stop => {
+
+   try{
+    stop();
+   }catch(e){}
+
+  }
+ );
+
+
+ listenerStops = [];
+
+
+ locationListenerStops.forEach(
+  stop => {
+
+   try{
+    stop();
+   }catch(e){}
+
+  }
+ );
+
+
+ locationListenerStops = [];
+
+}
+
+
+/* ======================================
+   HTML SAFETY
+====================================== */
+
+function escapeHTML(value){
+
+ return String(
+  value ?? ""
+ )
+ .replaceAll("&","&amp;")
+ .replaceAll("<","&lt;")
+ .replaceAll(">","&gt;")
+ .replaceAll('"',"&quot;")
+ .replaceAll("'","&#039;");
+
+}
+
+
+/* ======================================
+   FIREBASE ERRORS
+====================================== */
+
+function firebaseError(error){
+
+ console.error(error);
+
+
+ const code =
+ error?.code || "";
+
+
+ if(
+  code.includes(
+   "email-already-in-use"
+  )
+ ){
+
+  return "البريد مستخدم بالفعل.";
+
+ }
+
+
+ if(
+  code.includes(
+   "invalid-email"
+  )
+ ){
+
+  return "البريد الإلكتروني غير صحيح.";
+
+ }
+
+
+ if(
+  code.includes(
+   "weak-password"
+  )
+ ){
+
+  return "كلمة المرور ضعيفة.";
+
+ }
+
+
+ if(
+  code.includes(
+   "permission-denied"
+  )
+ ){
+
+  return "Firebase رفض العملية. تحقق من Rules.";
+
+ }
+
+
+ return (
+  "حدث خطأ: " +
+  (error?.message || "")
+ );
+
+}
+
+</script>
+
+</body>
+</html>
